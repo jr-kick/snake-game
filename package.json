@@ -1,0 +1,25 @@
+{
+  "name": "snake-game",
+  "version": "1.0.0",
+  "description": "Snaky snake boi",
+  "private": true,
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "watch": "webpack --watch"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jr-kick/snake-game.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/jr-kick/snake-game/issues"
+  },
+  "homepage": "https://github.com/jr-kick/snake-game#readme",
+  "devDependencies": {
+    "webpack": "^5.75.0",
+    "webpack-cli": "^4.10.0"
+  }
+}
