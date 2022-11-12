@@ -21,4 +21,11 @@ body {
 
 #gameboard>div {
   border: 1px solid red;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+#apple {
+  width: 80%;
 }
