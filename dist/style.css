@@ -13,8 +13,8 @@ body {
 
 #gameboard {
   display: grid;
-  grid-template-columns: repeat(16, 1fr);
-  grid-template-rows: repeat(16, 1fr);
+  grid-template-columns: repeat(12, 1fr);
+  grid-template-rows: repeat(12, 1fr);
   width: 40vw;
   height: 40vw;
 }

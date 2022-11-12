@@ -1,8 +1,9 @@
 const e = () => {
-  let snake = [{num: 97, dir: 'right'}, {num: 98, dir: 'right'}, {num: 99, dir: 'right'}, {num: 100, dir: 'right'}, {num: 101, dir: 'right'}, {num: 102, dir: 'right'}, {num: 103, dir: 'right'}];
+  let snake = [{num: 64, dir: 'right'}, {num: 63, dir: 'right'}, {num: 62, dir: 'right'}, {num: 61, dir: 'right'}];
+  let turnPoints = [];
 
   let direction = 'right';
-  let prevDirection = 'up';
+  let prevDirection = 'right';
 
   const apple = document.createElement('img');
   apple.src = './apple-icon.svg';
@@ -10,146 +11,101 @@ const e = () => {
 
 
   const tossApple = () => {
-    const inside = Array.from(document.querySelectorAll('.inside'));
-    let num = parseInt(Math.random() * 196)
-    if (snake.every(piece => piece.num != num)) {
+    let num = Number(parseInt(Math.random() * 12*12));
+    const grids = Array.from(document.querySelectorAll('#gameboard>div'))
+    if (snake.every(piece => piece.num != num) && !grids[num].classList.contains('border')) {
       apple.slot = num;
-      inside[num].appendChild(apple);
+      grids[num].appendChild(apple);
       return
     } else {
-      console.log('new apple!');
       tossApple();
       return
     };
   };
 
-  const foundApple = (grids) => {
-    let num = snake[0].num;
-    let dir = snake[0].dir;
-    switch(dir) {
-      case 'up':
-        num = num + 16;
-        break;
-        
-      case 'right':
-        num--;
-        break;
-        
-      case 'down':
-        num = num - 16;
-        break;
-        
-      case 'left':
-        num++;
-        break;
-    };
-    grids[num].style.backgroundColor = 'black';
-    snake.unshift({num: num, dir: dir});
-  };
-
   const startGame = (grids) => {
     window.addEventListener('keydown', switchDirection);
     const borderGrids = Array.from(document.querySelectorAll('.border'));
-    const inside = Array.from(document.querySelectorAll('.inside'));
 
     snake.forEach(piece => {
       grids[piece.num].style.backgroundColor = 'black';
-      grids[snake[snake.length - 1].num].style.backgroundColor = 'red';
     });
+    grids[snake[0].num].style.backgroundColor = 'red';
 
     tossApple();
 
     let move = setInterval(() => {
+      if (prevDirection != direction) {
+        turnPoints.push({num: 0, dir: direction});
+      };
 
-      grids.forEach(grid => grid.style.backgroundColor = '');
-      borderGrids.forEach(grid => grid.style.backgroundColor = 'orange');
+      const lastNum = snake[snake.length - 1].num;
+      const lastDir = snake[snake.length - 1].dir;
 
-      snake[snake.length - 1].dir = direction;
+      if (turnPoints.length > 0) {
+        turnPoints.forEach(point => {
+          snake[point.num].dir = point.dir;
+          point.num++;
+        });
+      };
 
       snake.forEach(piece => {
-
         switch(piece.dir) {
           case 'left':
             piece.num--;
-            if (piece == snake[snake.length - 1]) {
-              let appleGrid = grids[snake[snake.length - 1].num];
-        
-              if (inside[apple.slot] == appleGrid) {
-                tossApple(grids);
-                foundApple(grids);
-              };
-              
-              if (borderGrids.some(grid => grid.slot == piece.num)) {
-                clearInterval(move);
-                console.log('you lost');
-              };
-            };
             break;
             
           case 'up':
-            piece.num = piece.num - 16;
-            if (piece == snake[snake.length - 1]) {
-              let appleGrid = grids[snake[snake.length - 1].num];
-        
-              if (inside[apple.slot] == appleGrid) {
-                tossApple(grids);
-                foundApple(grids);
-              };
-              
-              if (borderGrids.some(grid => grid.slot == piece.num)) {
-                clearInterval(move);
-                console.log('you lost');
-              };
-            };
+            piece.num = piece.num - 12;
             break;
             
           case 'right':
             piece.num++;
-            if (piece == snake[snake.length - 1]) {
-              let appleGrid = grids[snake[snake.length - 1].num];
-        
-              if (inside[apple.slot] == appleGrid) {
-                tossApple(grids);
-                foundApple(grids);
-              };
-              
-              if (borderGrids.some(grid => grid.slot == piece.num)) {
-                clearInterval(move);
-                console.log('you lost');
-              };
-            };
             break;
             
           case 'down':
-            piece.num = piece.num + 16;
-            if (piece == snake[snake.length - 1]) {
-              let appleGrid = grids[snake[snake.length - 1].num];
-        
-              if (inside[apple.slot] == appleGrid) {
-                tossApple(grids);
-                foundApple(grids);
-              };
-
-              if (borderGrids.some(grid => grid.slot == piece.num)) {
-                clearInterval(move);
-                console.log('you lost');
-              };
-            };
+            piece.num = piece.num + 12;
             break;
-        }
-
-        grids[piece.num].style.backgroundColor = 'black';
-
-        let index = snake.indexOf(piece);
-
-        if (piece != snake[snake.length - 1]) {
-          piece.dir = snake[index + 1].dir;
         };
       });
 
-      grids[snake[snake.length - 1].num].style.backgroundColor = 'red';
+      if (snake.some(piece => {
+        if (piece != snake[0]) {
+          return piece.num == snake[0].num
+        }
+      }) || borderGrids.some(grid => grid.slot == snake[0].num)) {
+        clearInterval(move);
+        console.log('you lost');
+        return
+      };
+
+      if (grids[snake[0].num] == grids[apple.slot]) {
+        grids[apple.slot].removeChild(apple);
+        tossApple();
+        snake.push({num: lastNum, dir: lastDir});
+
+        if (turnPoints.length > 0 && turnPoints[0].num == snake.length - 1) {
+          snake[snake.length - 1].dir = turnPoints[0].dir;
+          turnPoints[0].num++;
+        };
+      };
+      
+      if (turnPoints.length > 0 && turnPoints[0].num > snake.length - 1) {
+        turnPoints = turnPoints.slice(1, turnPoints.length);
+      };
+      
+      grids.forEach(grid => {
+        grid.style.backgroundColor = '';
+      });
+      borderGrids.forEach(grid => grid.style.backgroundColor = 'orange');
+
+      snake.forEach(piece => {
+        grids[piece.num].style.backgroundColor = 'black';
+      });
+      grids[snake[0].num].style.backgroundColor = 'red';
+
       prevDirection = direction;
-    }, 100);
+    }, 200);
   };
 
   const switchDirection = (e) => {
