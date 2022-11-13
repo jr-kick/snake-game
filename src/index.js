@@ -1,4 +1,5 @@
-import defaultLoad from './components/defaultLoad';
+import loadLevel from './components/loadLevel';
 import engine from './components/engine';
+import loadMenu from './components/menu';
 
-window.addEventListener('load', defaultLoad);
+window.addEventListener('load', loadMenu.defaultMenu);

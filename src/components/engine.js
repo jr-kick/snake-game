@@ -1,17 +1,54 @@
-const e = () => {
-  let snake = [{num: 64, dir: 'right'}, {num: 63, dir: 'right'}, {num: 62, dir: 'right'}, {num: 61, dir: 'right'}];
-  let turnPoints = [];
+import loadLevel from "./loadLevel";
+import loadMenu from "./menu";
 
-  let direction = 'right';
-  let prevDirection = 'right';
+const e = () => {
+  let currentLevel;
+
+  let snake = [];
+  let turnPoints = [];
+  let unit;
+
+  let score = 0;
+
+  let direction;
+  let prevDirection;
+
+  let speed = 350;
 
   const apple = document.createElement('img');
   apple.src = './apple-icon.svg';
   apple.setAttribute('id', 'apple');
 
+  const gameLostBox = document.querySelector('#game-lost');
+  const restartBtn = document.querySelector('#restart');
+  const backToMenuBtn = document.querySelector('#back-to-menu');
+  const scoreCounter = document.querySelector('#score');
+
+  restartBtn.onclick = () => {
+    snake = [];
+    turnPoints = [];
+  
+    score = 0;
+    scoreCounter.textContent = 'Score: 0';
+  
+    gameLostBox.style.display = 'none';
+    loadLevel.load(currentLevel);
+  };
+
+  backToMenuBtn.onclick = () => {
+    snake = [];
+    turnPoints = [];
+  
+    score = 0;
+    scoreCounter.textContent = 'Score: 0';
+  
+    gameLostBox.style.display = 'none';
+    loadMenu.defaultMenu();
+  };
+
 
   const tossApple = () => {
-    let num = Number(parseInt(Math.random() * 12*12));
+    let num = Number(parseInt(Math.random() * unit*unit));
     const grids = Array.from(document.querySelectorAll('#gameboard>div'))
     if (snake.every(piece => piece.num != num) && !grids[num].classList.contains('border')) {
       apple.slot = num;
@@ -23,14 +60,18 @@ const e = () => {
     };
   };
 
-  const startGame = (grids) => {
+  const startGame = (newLevel, initialSnake, initialDirection, newUnit, initialTurnPoints) => {
+    currentLevel = newLevel;
+    snake = initialSnake;
+    direction = initialDirection;
+    unit = newUnit;
+    if (initialTurnPoints) {
+      turnPoints = initialTurnPoints;
+    };
     window.addEventListener('keydown', switchDirection);
-    const borderGrids = Array.from(document.querySelectorAll('.border'));
 
-    snake.forEach(piece => {
-      grids[piece.num].style.backgroundColor = 'black';
-    });
-    grids[snake[0].num].style.backgroundColor = 'red';
+    const grids = Array.from(document.querySelectorAll('#gameboard>div'));
+    const borderGrids = Array.from(document.querySelectorAll('.border'));
 
     tossApple();
 
@@ -56,7 +97,7 @@ const e = () => {
             break;
             
           case 'up':
-            piece.num = piece.num - 12;
+            piece.num = piece.num - unit;
             break;
             
           case 'right':
@@ -64,7 +105,7 @@ const e = () => {
             break;
             
           case 'down':
-            piece.num = piece.num + 12;
+            piece.num = piece.num + unit;
             break;
         };
       });
@@ -75,19 +116,23 @@ const e = () => {
         }
       }) || borderGrids.some(grid => grid.slot == snake[0].num)) {
         clearInterval(move);
-        console.log('you lost');
+        gameLost();
         return
       };
 
       if (grids[snake[0].num] == grids[apple.slot]) {
+        score++;
+        scoreCounter.textContent = `Score: ${score}`
+
         grids[apple.slot].removeChild(apple);
-        tossApple();
         snake.push({num: lastNum, dir: lastDir});
 
         if (turnPoints.length > 0 && turnPoints[0].num == snake.length - 1) {
           snake[snake.length - 1].dir = turnPoints[0].dir;
           turnPoints[0].num++;
         };
+
+        tossApple();
       };
       
       if (turnPoints.length > 0 && turnPoints[0].num > snake.length - 1) {
@@ -95,17 +140,17 @@ const e = () => {
       };
       
       grids.forEach(grid => {
-        grid.style.backgroundColor = '';
+        grid.style.backgroundColor = 'white';
       });
       borderGrids.forEach(grid => grid.style.backgroundColor = 'orange');
 
       snake.forEach(piece => {
-        grids[piece.num].style.backgroundColor = 'black';
+        grids[piece.num].style.backgroundColor = 'rgb(0, 97, 0)';
       });
-      grids[snake[0].num].style.backgroundColor = 'red';
+      grids[snake[0].num].style.backgroundColor = 'rgb(0, 187, 0)';
 
       prevDirection = direction;
-    }, 200);
+    }, speed);
   };
 
   const switchDirection = (e) => {
@@ -126,8 +171,18 @@ const e = () => {
     }
   };
 
+  const setSpeed = (newSpeed) => {
+    speed = newSpeed;
+  };
+
+  const gameLost = () => {
+    gameLostBox.style.display = 'flex';
+    window.removeEventListener('keydown', switchDirection);
+  };
+
   return {
-    startGame
+    startGame,
+    setSpeed
   }
 };
 
