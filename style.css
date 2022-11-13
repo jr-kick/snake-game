@@ -1,6 +1,21 @@
+@font-face {
+  font-family: chiptune-font;
+  src: url(./DisposableDroidBB.ttf);
+}
+
 * {
   margin: 0;
   padding: 0;
+  font-family: chiptune-font;
+  font-size: 1.2rem;
+}
+
+*:hover {
+  cursor: default;
+}
+
+button:hover {
+  cursor: pointer;
 }
 
 body {
@@ -11,21 +26,75 @@ body {
   align-items: center;
 }
 
+#frame {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: flex-end;
+  z-index: 1;
+}
+
+#score {
+  background-color: rgb(205, 0, 0);
+  border-radius: 15px 15px 0px 0px;
+  width: 100px;
+  text-align: center;
+  height: 20px;
+}
+
+.right-div, .left-div {
+  width: 20px;
+  height: 10px;
+  overflow: hidden;
+}
+
+.right-div>div {
+  border-radius: 0px 0px 0px 15px;
+  width: 100%;
+  height: 100%;
+  box-shadow: -3px 3px rgb(205, 0, 0);
+}
+
+.left-div>div {
+  border-radius: 0px 0px 15px 0px;
+  width: 100%;
+  height: 100%;
+  box-shadow: 3px 3px rgb(205, 0, 0);
+}
+
 #gameboard {
-  display: grid;
-  grid-template-columns: repeat(12, 1fr);
-  grid-template-rows: repeat(12, 1fr);
   width: 40vw;
   height: 40vw;
+  background-color: orange;
+  outline: 5px solid rgb(205, 0, 0);
+  margin: 5px;
+  border: 1px solid rgba(0, 0, 0, 0.608);
+  box-shadow: 0px 0px 20px 10px rgb(255, 0, 0);
 }
 
 #gameboard>div {
-  border: 1px solid red;
+  border: 1px solid rgba(0, 0, 0, 0.608);
   display: flex;
   justify-content: center;
   align-items: center;
 }
 
+#gameboard button {
+  width: 150px;
+}
+
 #apple {
   width: 80%;
+}
+
+#press-key {
+  position: absolute;
+  display: none;
+}
+
+#game-lost {
+  position: absolute;
+  display: none;
+  flex-direction: column;
+  align-items: center;
 }
