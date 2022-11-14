@@ -31,10 +31,28 @@ h1 {
 
 body {
   height: 100vh;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+}
+
+#game {
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  width: fit-content;
+  grid-column: 2 / 3;
+}
+
+#instructions {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  width: 250px;
+  padding-left: 30px;
+  gap: 20px;
+  grid-column: 3 / 4;
 }
 
 #frame {
@@ -45,12 +63,41 @@ body {
   z-index: 1;
 }
 
+#mute-button {
+  width: 20px;
+  height: 20px;
+  border-radius: 10px;
+  border: none;
+  display: flex;
+  align-self: center;
+  justify-self: center;
+  background-color: rgb(205, 0, 0);
+}
+
+#mute-button:hover {
+  background-color: rgb(184, 0, 0);
+}
+
+#mute-button img {
+  width: 100%;
+}
+
+#mute-button>div:hover, #mute-button img:hover {
+  cursor: pointer;
+}
+
 #score {
+  display: grid;
+  grid-template-columns: 1fr 125px 1fr;
+  width: 200px;
   background-color: rgb(205, 0, 0);
   border-radius: 15px 15px 0px 0px;
-  width: 100px;
   text-align: center;
-  height: 20px;
+  height: 22px;
+}
+
+#score>p {
+  grid-column: 2 / 3;
 }
 
 .right-div, .left-div {
@@ -115,4 +162,9 @@ body {
   display: none;
   flex-direction: column;
   align-items: center;
+}
+
+.alert {
+  justify-self: center;
+  align-self: center;
 }
