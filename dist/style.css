@@ -3,6 +3,11 @@
   src: url(./DisposableDroidBB.ttf);
 }
 
+@font-face {
+  font-family: chiptune-font-bold;
+  src: url(./DisposableDroidBB_bld.ttf);
+}
+
 * {
   margin: 0;
   padding: 0;
@@ -16,6 +21,12 @@
 
 button:hover {
   cursor: pointer;
+}
+
+h1 {
+  font-weight: 400;
+  font-family: chiptune-font-bold;
+  font-size: 2rem;
 }
 
 body {
@@ -93,6 +104,13 @@ body {
 }
 
 #game-lost {
+  position: absolute;
+  display: none;
+  flex-direction: column;
+  align-items: center;
+}
+
+#game-won {
   position: absolute;
   display: none;
   flex-direction: column;

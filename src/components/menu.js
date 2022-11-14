@@ -4,6 +4,23 @@ import engine from "./engine";
 const lm = () => {
   const gameboard = document.querySelector('#gameboard');
   let newSpeed = 350;
+  let difNum = 0;
+  let levels = [{name: 'You', difficulty: ['unlocked', 'unlocked', 'unlocked', 'unlocked']}, {name: 'Are'}, {name: 'Beautiful'}];
+  levels.forEach(level => {
+    if (level != levels[0]) {
+      level.difficulty = ['locked', 'locked', 'locked', 'locked'];
+    };
+  });
+
+  const unlockLevels = (currentLevel) => {
+    let nextLevel = currentLevel + 1;
+    if (levels[nextLevel]) {
+      for (let i = 0; i <= difNum; i++) {
+        levels[nextLevel].difficulty[i] = 'unlocked';
+      };
+    };
+    console.log(levels);
+  };
 
   const defaultMenu = () => {
     gameboard.style.cssText = `
@@ -15,13 +32,16 @@ const lm = () => {
     `;
     gameboard.innerHTML = '';
 
+    const title = document.createElement('h1');
     const newGameBtn = document.createElement('button');
     const chooseLevelBtn = document.createElement('button');
     const setDifficultyBtn = document.createElement('button');
 
+    title.textContent = 'Sneaky Snake Snack';
+
     newGameBtn.textContent = 'New Game';
     newGameBtn.addEventListener('click', () => {
-      loadLevel.load('levelOne');
+      loadLevel.load(0, difNum);
     });
     
     chooseLevelBtn.textContent = 'Levels';
@@ -34,6 +54,7 @@ const lm = () => {
       setDifficulty();
     });
 
+    gameboard.appendChild(title);
     gameboard.appendChild(newGameBtn);
     gameboard.appendChild(chooseLevelBtn);
     gameboard.appendChild(setDifficultyBtn);
@@ -42,35 +63,38 @@ const lm = () => {
   const chooseLevel = () => {
     gameboard.innerHTML = '';
 
-    const levelOneBtn = document.createElement('button');
-    const levelTwoBtn = document.createElement('button');
-    const levelThreeBtn = document.createElement('button');
+    const youBtn = document.createElement('button');
+    const areBtn = document.createElement('button');
+    const beautifulBtn = document.createElement('button');
     const backToMenuBtn = document.createElement('button');
 
-    levelOneBtn.textContent = 'You';
-    levelTwoBtn.textContent = 'Are';
-    levelThreeBtn.textContent = 'Beautiful';
     backToMenuBtn.textContent = 'Back To Menu';
 
-    levelOneBtn.addEventListener('click', () => {
-      loadLevel.load('levelOne');
-    });
+    const levelArray = [];
+    levelArray.push(youBtn, areBtn, beautifulBtn);
+    
+    for (let i = 0; i < levelArray.length; i++) {
+      if (levels[i].difficulty[difNum] != 'locked') {
+        levelArray[i].textContent = levels[i].name;
+        levelArray[i].addEventListener('click', () => {
+          loadLevel.load(i, difNum);
+        });
+      } else {
+        levelArray[i].textContent = 'Locked';
+      };
+    };
 
-    levelTwoBtn.addEventListener('click', () => {
-      loadLevel.load('levelTwo');
-    });
-
-    levelThreeBtn.addEventListener('click', () => {
-      loadLevel.load('levelThree');
-    });
+    if (levels[2].difficulty[3] == 'unlocked') {
+      beautifulBtn.textContent = 'Crazy';
+    };
 
     backToMenuBtn.addEventListener('click', () => {
       defaultMenu();
     });
 
-    gameboard.appendChild(levelOneBtn);
-    gameboard.appendChild(levelTwoBtn);
-    gameboard.appendChild(levelThreeBtn);
+    gameboard.appendChild(youBtn);
+    gameboard.appendChild(areBtn);
+    gameboard.appendChild(beautifulBtn);
     gameboard.appendChild(backToMenuBtn);
   };
 
@@ -91,21 +115,25 @@ const lm = () => {
 
     easyBtn.onclick = () => {
       newSpeed = 350;
+      difNum = 0;
       buttonArray.forEach(button => button.style.outline = '');
       easyBtn.style.outline = '2px solid black';
     };
     normalBtn.onclick = () => {
       newSpeed = 300;
+      difNum = 1;
       buttonArray.forEach(button => button.style.outline = '');
       normalBtn.style.outline = '2px solid black';
     };
     hardBtn.onclick = () => {
       newSpeed = 250;
+      difNum = 2;
       buttonArray.forEach(button => button.style.outline = '');
       hardBtn.style.outline = '2px solid black';
     };
     hardcoreBtn.onclick = () => {
       newSpeed = 200;
+      difNum = 3;
       buttonArray.forEach(button => button.style.outline = '');
       hardcoreBtn.style.outline = '2px solid black';
     };
@@ -123,27 +151,28 @@ const lm = () => {
     gameboard.appendChild(hardcoreBtn);
     gameboard.appendChild(okBtn);
     
-    switch(newSpeed) {
-      case 350:
+    switch(difNum) {
+      case 0:
         easyBtn.style.outline = '2px solid black';
         break;
         
-      case 300:
+      case 1:
         normalBtn.style.outline = '2px solid black';
         break;
         
-      case 200:
+      case 2:
         hardBtn.style.outline = '2px solid black';
         break;
         
-      case 150:
+      case 3:
         hardcoreBtn.style.outline = '2px solid black';
         break;
     };
   };
 
   return {
-    defaultMenu
+    defaultMenu,
+    unlockLevels
   }
 }
 
