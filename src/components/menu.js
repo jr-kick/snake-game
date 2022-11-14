@@ -139,6 +139,7 @@ const lm = () => {
     };
     okBtn.onclick = () => {
       engine.setSpeed(newSpeed);
+      engine.setDifficulty(difNum);
       defaultMenu();
     };
 

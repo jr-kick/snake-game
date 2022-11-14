@@ -3,6 +3,7 @@ import engine from "./engine";
 const ll = () => {
   const gameboard = document.querySelector('#gameboard');
   const pressKey = document.querySelector('#press-key');
+  const scoreCounter = document.querySelector('#score>p');
   let pack = {};
 
   const load = (level, difNum) => {
@@ -66,6 +67,8 @@ const ll = () => {
       grid-template-rows: repeat(${pack.newUnit}, 1fr);
     `;
 
+    scoreCounter.textContent = `Score: ${pack.newMaxScore}/0`;
+
     pressKey.style.display = 'block';
 
     window.addEventListener('keydown', keyPressed);
@@ -111,6 +114,8 @@ const ll = () => {
       grid-template-columns: repeat(${pack.newUnit}, 1fr);
       grid-template-rows: repeat(${pack.newUnit}, 1fr);
     `;
+
+    scoreCounter.textContent = `Score: ${pack.newMaxScore}/0`;
 
     pressKey.style.display = 'block';
 
@@ -159,6 +164,8 @@ const ll = () => {
       grid-template-columns: repeat(${pack.newUnit}, 1fr);
       grid-template-rows: repeat(${pack.newUnit}, 1fr);
     `;
+
+    scoreCounter.textContent = `Score: ${pack.newMaxScore}/0`;
 
     pressKey.style.display = 'block';
 

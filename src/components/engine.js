@@ -2,9 +2,18 @@ import loadLevel from "./loadLevel";
 import loadMenu from "./menu";
 
 const e = () => {
-  let currentLevel;
+  const chill = [new Audio('./chill/1.mp3'), new Audio('./chill/2.mp3'), new Audio('./chill/3.mp3'), new Audio('./chill/4.mp3'), new Audio('./chill/5.mp3'), new Audio('./chill/6.mp3'), new Audio('./chill/7.mp3'), new Audio('./chill/8.mp3'), new Audio('./chill/9.mp3'), new Audio('./chill/10.mp3'), new Audio('./chill/11.mp3'), new Audio('./chill/12.mp3')];
 
-  let snake = [];
+  const manlyTunes = [new Audio('./manly-tunes/1.mp3'), new Audio('./manly-tunes/2.mp3'), new Audio('./manly-tunes/3.mp3'), new Audio('./manly-tunes/4.mp3')];
+
+  let prevSong;
+  let music = 'ON';
+  let musicPlaying = false;
+
+  let currentLevel;
+  let difficulty = 0;
+
+  let snake = 'empty';
   let turnPoints = [];
   let unit;
 
@@ -25,11 +34,12 @@ const e = () => {
   const gameWonBox = document.querySelector('#game-won');
   const restartBtn = document.querySelector('#restart');
   const backToMenuBtn = Array.from(document.querySelectorAll('.back-to-menu'));
-  const scoreCounter = document.querySelector('#score');
+  const scoreCounter = document.querySelector('#score>p');
   const continueBtn = document.querySelector('#continue');
+  const muteBtn = document.querySelector('#mute-button');
 
   continueBtn.onclick = () => {
-    snake = [];
+    snake = 'empty';
     turnPoints = [];
   
     score = 0;
@@ -46,7 +56,7 @@ const e = () => {
   };
 
   function restart() {
-    snake = [];
+    snake = 'empty';
     turnPoints = [];
   
     score = 0;
@@ -61,7 +71,7 @@ const e = () => {
 
   backToMenuBtn.forEach(btn => {
     btn.onclick = () => {
-      snake = [];
+      snake = 'empty';
       turnPoints = [];
     
       score = 0;
@@ -69,6 +79,7 @@ const e = () => {
       
       gameWonBox.style.display = 'none';
       gameLostBox.style.display = 'none';
+      stopMusic();
       loadMenu.defaultMenu();
     };
   });
@@ -100,6 +111,16 @@ const e = () => {
 
     const grids = Array.from(document.querySelectorAll('#gameboard>div'));
     const borderGrids = Array.from(document.querySelectorAll('.border'));
+
+    if (music == 'ON' && !musicPlaying) {
+      let allMusic = chill.concat(manlyTunes);
+      allMusic.forEach(song => {
+        song.addEventListener('ended', startMusic);
+      });
+      window.addEventListener('keydown', skipMusic);
+      window.addEventListener('keydown', playDaBeast);
+      startMusic();
+    };
 
     tossApple();
 
@@ -205,6 +226,81 @@ const e = () => {
     }
   };
 
+  const setMusic = () => {
+    if (music == 'ON') {
+      music = 'OFF';
+      if (musicPlaying) {
+        prevSong.pause();
+        prevSong.currentTime = 0;
+        prevSong = '';
+        musicPlaying = false;
+        window.removeEventListener('keydown', skipMusic);
+        window.removeEventListener('keydown', playDaBeast);
+      };
+      muteBtn.style.backgroundColor = '#950000';
+    } else {
+      music = 'ON';
+      if (snake != 'empty') {
+        window.addEventListener('keydown', skipMusic);
+        window.addEventListener('keydown', playDaBeast);
+        startMusic();
+      };
+      muteBtn.style.backgroundColor = '';
+    };
+  };
+
+  const playDaBeast = (e) => {
+    if (e.keyCode == 81 && difficulty > 1 && prevSong != manlyTunes[1]) {
+      prevSong.pause();
+      prevSong.currentTime = 0;
+      prevSong = manlyTunes[1];
+      manlyTunes[1].play();
+    };
+  };
+
+  const stopMusic = () => {
+    prevSong.pause();
+    prevSong.currentTime = 0;
+    prevSong = '';
+    musicPlaying = false;
+    window.removeEventListener('keydown', skipMusic);
+    window.removeEventListener('keydown', playDaBeast);
+  };
+
+  const skipMusic = (e) => {
+    if (e.keyCode == 77 && prevSong) {
+      prevSong.pause();
+      prevSong.currentTime = 0;
+      startMusic();
+    };
+  };
+
+  const startMusic = () => {
+    let num;
+    if (difficulty <= 1) {
+      num = Number(parseInt(Math.random() * 12));
+      if (prevSong != chill[num]) {
+        chill[num].play();
+        prevSong = chill[num];
+      } else {
+        startMusic();
+      }
+    } else if (difficulty > 1) {
+      num = Number(parseInt(Math.random() * 4));
+      if (prevSong != manlyTunes[num]) {
+        manlyTunes[num].play();
+        prevSong = manlyTunes[num];
+      } else {
+        startMusic();
+      }
+    };
+    musicPlaying = true;
+  };
+
+  const setDifficulty = (newDifficulty) => {
+    difficulty = newDifficulty;
+  };
+
   const setSpeed = (newSpeed) => {
     speed = newSpeed;
   };
@@ -223,7 +319,9 @@ const e = () => {
 
   return {
     startGame,
-    setSpeed
+    setSpeed,
+    setDifficulty,
+    setMusic
   }
 };
 
