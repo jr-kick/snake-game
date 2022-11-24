@@ -259,12 +259,14 @@ const e = () => {
   };
 
   const stopMusic = () => {
+    if (prevSong.duration > 0 && !prevSong.paused) {
     prevSong.pause();
     prevSong.currentTime = 0;
     prevSong = '';
     musicPlaying = false;
     window.removeEventListener('keydown', skipMusic);
     window.removeEventListener('keydown', playDaBeast);
+    }
   };
 
   const skipMusic = (e) => {
