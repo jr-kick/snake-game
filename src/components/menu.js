@@ -36,6 +36,9 @@ const lm = () => {
     const newGameBtn = document.createElement('button');
     const chooseLevelBtn = document.createElement('button');
     const setDifficultyBtn = document.createElement('button');
+    const infoButton = document.createElement('button');
+
+    infoButton.classList.add('info-button');
 
     title.textContent = 'Sneaky Snake Snack';
 
@@ -54,10 +57,30 @@ const lm = () => {
       setDifficulty();
     });
 
+    infoButton.textContent = 'Info';
+    infoButton.addEventListener('click', () => {
+      info();
+    });
+
     gameboard.appendChild(title);
     gameboard.appendChild(newGameBtn);
     gameboard.appendChild(chooseLevelBtn);
     gameboard.appendChild(setDifficultyBtn);
+    gameboard.appendChild(infoButton);
+  };
+
+  const info = () => {
+    gameboard.innerHTML = '';
+
+    const instructions = document.querySelector('#instructions');
+    const div = document.createElement('div');
+
+    instructions.id = 'menu-instructions';
+
+    div.classList.add('scroll');
+
+    div.appendChild(instructions);
+    gameboard.appendChild(div);
   };
 
   const chooseLevel = () => {

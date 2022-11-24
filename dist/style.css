@@ -8,6 +8,174 @@
   src: url(./DisposableDroidBB_bld.ttf);
 }
 
+@media (max-width: 460px) {
+
+  #game {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: fit-content;
+    height: fit-content;
+    grid-row: 2/3;
+    align-self: center;
+    justify-self: center;
+  }
+
+  .music {
+    display: flex;
+    grid-row: 1/2;
+    align-self: center;
+    justify-self: center;
+  }
+
+  .music p {
+    font-size: 20px;
+  }
+
+  .info-button {
+    display: none;
+  }
+
+  .alert {
+    text-align: center;
+  }
+
+  .arrows {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100px;
+    height: 100px;
+    grid-row: 3/4;
+    align-self: center;
+    justify-self: center;
+    background-color: rgb(212, 0, 0);
+    border-radius: 50%;
+  }
+
+  .arrows img {
+    width: 100%;
+  }
+
+  .up>img {
+    transform: rotate(90deg);
+  }
+
+  .right>img {
+    transform: rotate(180deg);
+  }
+
+  .down>img {
+    transform: rotate(-90deg);
+  }
+
+  .arrows button {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 35px;
+    height: 35px;
+    background: none;
+    border: none;
+  }
+
+  .y-axis {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-direction: column;
+    justify-self: center;
+    align-self: center;
+    height: 100%;
+  }
+
+  body {
+    height: 100vh;
+    display: grid;
+    grid-template-rows: repeat(3, 1fr);
+  }
+
+  #gameboard {
+    width: 95vw;
+    height: 95vw;
+  }
+
+  #instructions {
+    display: none;
+  }
+}
+
+@media (min-width: 461px) and (max-width: 1024px) {
+
+  #game {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: fit-content;
+    grid-column: 2 / 3;
+  }
+
+  .mobile {
+    display: none;
+  }
+  #gameboard {
+    width: 85vh;
+    height: 85vh;
+  }
+
+  #instructions {
+    display: none;
+  }
+
+  body {
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+}
+
+@media (min-width: 1025px) {
+
+  #game {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: fit-content;
+    grid-column: 2 / 3;
+  }
+
+  .info-button {
+    display: none;
+  }
+
+  .mobile {
+    display: none;
+  }
+  #gameboard {
+    width: 85vh;
+    height: 85vh;
+  }
+
+  #instructions {
+    display: flex;
+  }
+
+  body {
+    height: 100vh;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+  }
+}
+
+.scroll {
+  overflow-y: scroll;
+  height: 85vh;
+}
+
 * {
   margin: 0;
   padding: 0;
@@ -29,23 +197,15 @@ h1 {
   font-size: 2rem;
 }
 
-body {
-  height: 100vh;
-  display: grid;
-  grid-template-columns: 1fr 1fr 1fr;
-}
-
-#game {
+#menu-instructions {
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  justify-content: flex-start;
   align-items: center;
-  width: fit-content;
-  grid-column: 2 / 3;
+  gap: 20px;
 }
 
 #instructions {
-  display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: flex-start;
@@ -121,13 +281,12 @@ body {
 }
 
 #gameboard {
-  width: 40vw;
-  height: 40vw;
   background-color: orange;
   outline: 5px solid rgb(205, 0, 0);
   margin: 5px;
   border: 1px solid rgba(0, 0, 0, 0.608);
   box-shadow: 0px 0px 20px 10px rgb(255, 0, 0);
+  text-align: center;
 }
 
 #gameboard>div {

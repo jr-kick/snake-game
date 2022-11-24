@@ -37,6 +37,9 @@ const e = () => {
   const scoreCounter = document.querySelector('#score>p');
   const continueBtn = document.querySelector('#continue');
   const muteBtn = document.querySelector('#mute-button');
+  const quality = document.querySelector('.quality');
+  const skip = document.querySelector('.skip');
+  const arrows = document.querySelectorAll('.arrows button');
 
   continueBtn.onclick = () => {
     snake = 'empty';
@@ -98,6 +101,14 @@ const e = () => {
     };
   };
 
+  const arrowFn = (e) => {
+    if (e.target.localName != 'button') {
+      switchDirection(e.target.parentElement);
+    } else {
+      switchDirection(e.target);
+    }
+  };
+
   const startGame = ({newLevel, initialSnake, initialDirection, newUnit, initialTurnPoints, newMaxScore}) => {
     maxScore = newMaxScore;
     currentLevel = newLevel;
@@ -108,6 +119,9 @@ const e = () => {
       turnPoints = initialTurnPoints;
     };
     window.addEventListener('keydown', switchDirection);
+    arrows.forEach(arrow => {
+      arrow.addEventListener('click', arrowFn);
+    });
 
     const grids = Array.from(document.querySelectorAll('#gameboard>div'));
     const borderGrids = Array.from(document.querySelectorAll('.border'));
@@ -119,6 +133,8 @@ const e = () => {
       });
       window.addEventListener('keydown', skipMusic);
       window.addEventListener('keydown', playDaBeast);
+      skip.addEventListener('click', skipMusicBtn);
+      quality.addEventListener('click', playDaBeastBtn);
       startMusic();
     };
 
@@ -209,19 +225,19 @@ const e = () => {
   };
 
   const switchDirection = (e) => {
-    if ((prevDirection === 'down' || prevDirection === 'up') && e.keyCode === 37) {
+    if ((prevDirection === 'down' || prevDirection === 'up') && (e.keyCode === 37 || e.slot == 'left')) {
       direction = 'left';
     }
     
-    if ((prevDirection === 'down' || prevDirection === 'up') && e.keyCode === 39) {
+    if ((prevDirection === 'down' || prevDirection === 'up') && (e.keyCode === 39 || e.slot == 'right')) {
       direction = 'right';
     }
     
-    if ((prevDirection === 'left' || prevDirection === 'right') && e.keyCode === 38) {
+    if ((prevDirection === 'left' || prevDirection === 'right') && (e.keyCode === 38 || e.slot == 'up')) {
       direction = 'up';
     }
     
-    if ((prevDirection === 'left' || prevDirection === 'right') && e.keyCode === 40) {
+    if ((prevDirection === 'left' || prevDirection === 'right') && (e.keyCode === 40 || e.slot == 'down')) {
       direction = 'down';
     }
   };
@@ -236,6 +252,8 @@ const e = () => {
         musicPlaying = false;
         window.removeEventListener('keydown', skipMusic);
         window.removeEventListener('keydown', playDaBeast);
+        skip.removeEventListener('click', skipMusicBtn);
+        quality.removeEventListener('click', playDaBeastBtn);
       };
       muteBtn.style.backgroundColor = '#950000';
     } else {
@@ -243,9 +261,20 @@ const e = () => {
       if (snake != 'empty') {
         window.addEventListener('keydown', skipMusic);
         window.addEventListener('keydown', playDaBeast);
+        skip.addEventListener('click', skipMusicBtn);
+        quality.addEventListener('click', playDaBeastBtn);
         startMusic();
       };
       muteBtn.style.backgroundColor = '';
+    };
+  };
+
+  const playDaBeastBtn = () => {
+    if (difficulty > 1 && prevSong != manlyTunes[1]) {
+      prevSong.pause();
+      prevSong.currentTime = 0;
+      prevSong = manlyTunes[1];
+      manlyTunes[1].play();
     };
   };
 
@@ -266,7 +295,17 @@ const e = () => {
     musicPlaying = false;
     window.removeEventListener('keydown', skipMusic);
     window.removeEventListener('keydown', playDaBeast);
+    skip.removeEventListener('click', skipMusicBtn);
+    quality.removeEventListener('click', playDaBeastBtn);
     }
+  };
+
+  const skipMusicBtn = () => {
+    if (prevSong) {
+      prevSong.pause();
+      prevSong.currentTime = 0;
+      startMusic();
+    };
   };
 
   const skipMusic = (e) => {
@@ -310,12 +349,18 @@ const e = () => {
   const gameWon = () => {
     gameWonBox.style.display = 'flex';
     window.removeEventListener('keydown', switchDirection);
+    arrows.forEach(arrow => {
+      arrow.removeEventListener('click', arrowFn);
+    });
     loadMenu.unlockLevels(currentLevel);
   };
 
   const gameLost = () => {
     gameLostBox.style.display = 'flex';
     window.removeEventListener('keydown', switchDirection);
+    arrows.forEach(arrow => {
+      arrow.removeEventListener('click', arrowFn);
+    });
     window.addEventListener('keydown', keydownFn);
   };
 

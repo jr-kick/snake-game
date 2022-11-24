@@ -4,6 +4,7 @@ const ll = () => {
   const gameboard = document.querySelector('#gameboard');
   const pressKey = document.querySelector('#press-key');
   const scoreCounter = document.querySelector('#score>p');
+  const arrows = document.querySelectorAll('.arrows button');
   let pack = {};
 
   const load = (level, difNum) => {
@@ -72,6 +73,9 @@ const ll = () => {
     pressKey.style.display = 'block';
 
     window.addEventListener('keydown', keyPressed);
+    arrows.forEach(arrow => {
+      arrow.addEventListener('click', keyPressed);
+    });
   };
 
   const Are = () => {
@@ -120,6 +124,9 @@ const ll = () => {
     pressKey.style.display = 'block';
 
     window.addEventListener('keydown', keyPressed);
+    arrows.forEach(arrow => {
+      arrow.addEventListener('click', keyPressed);
+    });
   };
 
   const Beautiful = () => {
@@ -170,10 +177,16 @@ const ll = () => {
     pressKey.style.display = 'block';
 
     window.addEventListener('keydown', keyPressed);
+    arrows.forEach(arrow => {
+      arrow.addEventListener('click', keyPressed);
+    });
   };
 
   function keyPressed() {
     window.removeEventListener('keydown', keyPressed);
+    arrows.forEach(arrow => {
+      arrow.removeEventListener('click', keyPressed);
+    });
     pressKey.style.display = 'none';
     engine.startGame({newLevel: pack.newLevel, initialSnake: pack.initialSnake, initialDirection: pack.initialDirection, newUnit: pack.newUnit, initialTurnPoints: pack.initialTurnPoints, newMaxScore: pack.newMaxScore});
   };
